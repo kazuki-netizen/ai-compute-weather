@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Compute Weather</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div class="brandline">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <div>
+            <p class="eyebrow">AI Compute Weather</p>
+            <h1>Off-peak compute router</h1>
+          </div>
+        </div>
+        <div class="actions">
+          <span class="sync-pill"><span class="live-dot live"></span><span id="updatedAt">--</span></span>
+          <a class="button secondary" href="/api/export.csv" aria-label="Export CSV">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
+            CSV
+          </a>
+          <button class="button" id="refreshButton" type="button">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 6v5h-5M4 18v-5h5m9.5-4A7 7 0 0 0 6 7.8M5.5 16A7 7 0 0 0 18 16.2"/></svg>
+            Refresh
+          </button>
+        </div>
+      </header>
+
+      <section class="metrics" aria-label="Market summary">
+        <article class="metric">
+          <span class="metric-label">Cheapest</span>
+          <strong id="cheapestMetric">$--</strong>
+          <span id="cheapestSub">--</span>
+        </article>
+        <article class="metric">
+          <span class="metric-label">Signal</span>
+          <strong id="signalMetric">--</strong>
+          <span id="signalSub">--</span>
+        </article>
+        <article class="metric">
+          <span class="metric-label">Live offers</span>
+          <strong id="liveMetric">--</strong>
+          <span id="sourceSub">--</span>
+        </article>
+        <article class="metric">
+          <span class="metric-label">Queued jobs</span>
+          <strong id="queueMetric">--</strong>
+          <span id="queueSub">--</span>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <div class="market-panel panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Market</p>
+              <h2>GPU prices</h2>
+            </div>
+            <div class="filters">
+              <select id="gpuFilter" aria-label="GPU filter"></select>
+              <select id="providerFilter" aria-label="Provider filter"></select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Provider</th>
+                  <th>GPU</th>
+                  <th>Region</th>
+                  <th>Instance</th>
+                  <th>$/GPU h</th>
+                  <th>Source</th>
+                </tr>
+              </thead>
+              <tbody id="offerRows"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <aside class="side-stack">
+          <section class="decision panel">
+            <div class="panel-block">
+              <p class="eyebrow">Dispatch</p>
+              <h2 id="decisionTitle">--</h2>
+              <p id="decisionDetail">--</p>
+            </div>
+          </section>
+
+          <form class="job-form panel" id="jobForm">
+            <p class="eyebrow">Queue</p>
+            <label class="wide">
+              <span>Name</span>
+              <input name="name" value="embedding-backfill" maxlength="80">
+            </label>
+            <label>
+              <span>GPU</span>
+              <select name="gpu" id="jobGpu"></select>
+            </label>
+            <label>
+              <span>Executor</span>
+              <select name="executor" id="jobExecutor">
+                <option value="dry-run">Dry run</option>
+                <option value="local">Local command</option>
+                <option value="vast" disabled>Vast.ai connector (planned)</option>
+                <option value="runpod" disabled>RunPod connector (planned)</option>
+              </select>
+            </label>
+            <label class="wide">
+              <span>Command</span>
+              <textarea name="command" rows="3">node -e "console.log('cheap compute window:', process.env.AI_COMPUTE_PROVIDER, process.env.AI_COMPUTE_GPU, process.env.AI_COMPUTE_PRICE_USD_GPU_HOUR)"</textarea>
+            </label>
+            <label>
+              <span>Max $/GPU h</span>
+              <input name="maxPriceUsdGpuHour" type="number" min="0.01" step="0.01" value="1.75">
+            </label>
+            <label>
+              <span>Retries</span>
+              <input name="retryLimit" type="number" min="0" max="5" step="1" value="1">
+            </label>
+            <label>
+              <span>Timeout s</span>
+              <input name="timeoutSeconds" type="number" min="1" max="3600" step="1" value="120">
+            </label>
+            <label>
+              <span>Deadline h</span>
+              <input name="deadlineHours" type="number" min="1" max="168" step="1" value="6">
+            </label>
+            <button class="button full" type="submit">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 14-7-7 14-2-7-5 0Z"/></svg>
+              Queue job
+            </button>
+          </form>
+        </aside>
+      </section>
+
+      <section class="charts">
+        <div class="chart-panel panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Trend</p>
+              <h2>Cheapest price</h2>
+            </div>
+            <span class="timestamp">Last 96 samples</span>
+          </div>
+          <canvas id="priceChart" width="900" height="260" aria-label="Price trend"></canvas>
+        </div>
+        <div class="queue-panel panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Jobs</p>
+              <h2>Batch queue</h2>
+            </div>
+          </div>
+          <div id="jobList" class="job-list"></div>
+        </div>
+      </section>
+
+      <section class="sources" id="sources"></section>
+    </main>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
