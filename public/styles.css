@@ -146,6 +146,30 @@ h3 {
   justify-content: flex-end;
 }
 
+.language-control {
+  display: inline-flex;
+  align-items: center;
+}
+
+.language-control select {
+  min-width: 132px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: var(--shadow-1);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .button,
 .sync-pill {
   min-height: 40px;

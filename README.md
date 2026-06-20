@@ -23,6 +23,7 @@ Vercel mode supports live Azure price collection, CSV export, and `dry-run` job 
 ## What works now
 
 - Pulls live Azure GPU Spot VM prices from the unauthenticated Azure Retail Prices API.
+- Offers a multilingual UI in Japanese, English, Chinese, Korean, Spanish, Bisaya, Thai, Vietnamese, and Portuguese.
 - Normalizes offers into `provider`, `region`, `gpu`, `instance`, `priceUsdGpuHour`, and `sourceType`.
 - Shows proxy connectors for Vast.ai, RunPod, AWS Spot, and GCP Spot so the router and UI can be tested without cloud credentials.
 - Queues batch jobs and dispatches them when a matching offer is below the requested max price.
