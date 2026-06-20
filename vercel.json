@@ -15,8 +15,12 @@
   ],
   "routes": [
     {
+      "src": "/api/jobs/([^/]+)/cancel",
+      "dest": "/api/jobs/[id]/cancel.js?id=$1"
+    },
+    {
       "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "dest": "/api/$1.js"
     },
     {
       "src": "/",
